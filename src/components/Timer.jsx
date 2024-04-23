@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
-import './Timer.css';
+import "./Timer.css";
 
 export default function PomodoroTimer() {
-  const [focusDuration, setFocusDuration] = useState(25 * 60); // 25 minutes in seconds
-  const [breakDuration, setBreakDuration] = useState(5 * 60); // 5 minutes in seconds
+  const [focusDuration, setFocusDuration] = useState(25 * 60);
+  const [breakDuration, setBreakDuration] = useState(5 * 60);
   const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [timerActive, setTimerActive] = useState(false);
   const [isBreakTime, setIsBreakTime] = useState(false);
 
-  // Dragging functionality
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (event) => {
       if (isDragging) {
         setPosition({
-          x: event.clientX,
-          y: event.clientY,
+          x: event.clientX - offset.x,
+          y: event.clientY - offset.y,
         });
       }
     };
@@ -26,21 +26,29 @@ export default function PomodoroTimer() {
       setIsDragging(false);
     };
 
+    const handleSelectStart = (event) => {
+      if (isDragging) {
+        event.preventDefault();
+      }
+    };
+
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("selectstart", handleSelectStart);
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("selectstart", handleSelectStart);
     };
-  }, [isDragging]);
+  }, [isDragging, offset]);
 
   const handleMouseDown = (event) => {
+    const boundingBox = event.currentTarget.getBoundingClientRect();
+    const offsetX = event.clientX - boundingBox.left;
+    const offsetY = event.clientY - boundingBox.top;
+    setOffset({ x: offsetX, y: offsetY });
     setIsDragging(true);
-    setPosition({
-      x: event.clientX,
-      y: event.clientY,
-    });
   };
 
   const getTimeRemaining = (endTime) => {
