@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Timer.css";
+import "./components.css";
 
 export default function PomodoroTimer() {
   const [focusDuration, setFocusDuration] = useState(25 * 60);
