@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FiMaximize } from "react-icons/fi";
 import a from "../assets/images/a.png";
 import b from "../assets/images/b.jpg";
 import c from "../assets/images/c.jpg";
@@ -38,6 +39,34 @@ const Background = () => {
   const handleSelectStart = (event) => {
     if (isDragging) {
       event.preventDefault();
+    }
+  };
+
+  const toggleFullscreen = () => {
+    const doc = window.document;
+    const docEl = doc.documentElement;
+
+    const requestFullScreen =
+      docEl.requestFullscreen ||
+      docEl.mozRequestFullScreen ||
+      docEl.webkitRequestFullScreen ||
+      docEl.msRequestFullscreen;
+
+    const cancelFullScreen =
+      doc.exitFullscreen ||
+      doc.mozCancelFullScreen ||
+      doc.webkitExitFullscreen ||
+      doc.msExitFullscreen;
+
+    if (
+      !doc.fullscreenElement &&
+      !doc.mozFullScreenElement &&
+      !doc.webkitFullscreenElement &&
+      !doc.msFullscreenElement
+    ) {
+      requestFullScreen.call(docEl);
+    } else {
+      cancelFullScreen.call(doc);
     }
   };
 
@@ -93,6 +122,9 @@ const Background = () => {
           <div>
             <h1 className="timer-heading">Select Background</h1>
             <div>{defaultImageThumbnails}</div>
+            <button className="minimize-button" onClick={() => setMenuExpanded(!menuExpanded)}>
+              Minimize
+            </button>
           </div>
         ) : (
           <button
@@ -102,11 +134,8 @@ const Background = () => {
             Change Background
           </button>
         )}
-        <button
-          className="minimize-button"
-          onClick={() => setMenuExpanded(!menuExpanded)}
-        >
-          {menuExpanded ? "Minimize" : "Expand"}
+        <button className="fullscreen-button" onClick={toggleFullscreen}>
+          <FiMaximize />
         </button>
       </div>
     </div>
