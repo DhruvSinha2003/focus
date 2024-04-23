@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import './Timer.css';
 
 export default function PomodoroTimer() {
   const [focusDuration, setFocusDuration] = useState(25 * 60); // 25 minutes in seconds
@@ -6,6 +7,41 @@ export default function PomodoroTimer() {
   const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [timerActive, setTimerActive] = useState(false);
   const [isBreakTime, setIsBreakTime] = useState(false);
+
+  // Dragging functionality
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      if (isDragging) {
+        setPosition({
+          x: event.clientX,
+          y: event.clientY,
+        });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging]);
+
+  const handleMouseDown = (event) => {
+    setIsDragging(true);
+    setPosition({
+      x: event.clientX,
+      y: event.clientY,
+    });
+  };
 
   const getTimeRemaining = (endTime) => {
     const total = Date.parse(endTime) - Date.parse(new Date());
@@ -57,14 +93,18 @@ export default function PomodoroTimer() {
   };
 
   return (
-    <>
-      <h1>{timerActive ? (isBreakTime ? "Break" : "Focus Time") : "Pomodoro Timer"}</h1>
+    <div
+      className="timer-container"
+      style={{ top: position.y, left: position.x }}
+      onMouseDown={handleMouseDown}
+    >
+      <h1 className="timer-heading">{timerActive ? (isBreakTime ? "Break" : "Focus Time") : "Pomodoro Timer"}</h1>
       <div className="timer">
         {String(time.hours).padStart(2, "0")}:
         {String(time.minutes).padStart(2, "0")}:
         {String(time.seconds).padStart(2, "0")}
       </div>
-      <div>
+      <div className="timer-inputs">
         <label htmlFor="focusDuration">Focus Duration (minutes):</label>
         <input
           type="number"
@@ -73,7 +113,7 @@ export default function PomodoroTimer() {
           onChange={handleFocusDurationChange}
         />
       </div>
-      <div>
+      <div className="timer-inputs">
         <label htmlFor="breakDuration">Break Duration (minutes):</label>
         <input
           type="number"
@@ -82,12 +122,10 @@ export default function PomodoroTimer() {
           onChange={handleBreakDurationChange}
         />
       </div>
-      <div className="start">
+      <div className="timer-buttons">
         <button onClick={startTimer}>Start Timer</button>
-      </div>
-      <div className="stop">
         <button onClick={stopTimer}>Stop Timer</button>
       </div>
-    </>
+    </div>
   );
 }
