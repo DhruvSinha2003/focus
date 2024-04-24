@@ -11,9 +11,12 @@ const Background = () => {
   const [backgroundImage, setBackgroundImage] = useState("");
   const defaultImages = [a, b, c, d, e];
   const [menuExpanded, setMenuExpanded] = useState(true);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({ x: 20, y: window.innerHeight - 220 });
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
+
+  const componentWidth = 300; // Add this line
+  const componentHeight = 200; // Add this line
 
   const handleMouseDown = (event) => {
     const boundingBox = event.currentTarget.getBoundingClientRect();
@@ -25,9 +28,11 @@ const Background = () => {
 
   const handleMouseMove = (event) => {
     if (isDragging) {
+      const newX = Math.max(0, Math.min(event.clientX - offset.x, window.innerWidth - componentWidth));
+      const newY = Math.max(0, Math.min(event.clientY - offset.y, window.innerHeight - componentHeight));
       setPosition({
-        x: event.clientX - offset.x,
-        y: event.clientY - offset.y,
+        x: newX,
+        y: newY,
       });
     }
   };
@@ -110,6 +115,10 @@ const Background = () => {
             backgroundRepeat: "no-repeat",
             width: "100vw",
             height: "100vh",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            zIndex: -1,
           }}
         />
       )}

@@ -1,3 +1,4 @@
+// Timer.jsx
 import React, { useState, useEffect } from "react";
 import "./components.css";
 
@@ -8,16 +9,24 @@ export default function PomodoroTimer() {
   const [timerActive, setTimerActive] = useState(false);
   const [isBreakTime, setIsBreakTime] = useState(false);
 
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({
+    x: (window.innerWidth - 300) / 2,
+    y: (window.innerHeight - 400) / 2,
+  });
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
+
+  const componentWidth = 300; // Add this line
+  const componentHeight = 400; // Add this line
 
   useEffect(() => {
     const handleMouseMove = (event) => {
       if (isDragging) {
+        const newX = Math.max(0, Math.min(event.clientX - offset.x, window.innerWidth - componentWidth));
+        const newY = Math.max(0, Math.min(event.clientY - offset.y, window.innerHeight - componentHeight));
         setPosition({
-          x: event.clientX - offset.x,
-          y: event.clientY - offset.y,
+          x: newX,
+          y: newY,
         });
       }
     };
@@ -56,84 +65,92 @@ export default function PomodoroTimer() {
     const seconds = Math.floor((total / 1000) % 60);
     const minutes = Math.floor((total / 1000 / 60) % 60);
     const hours = Math.floor((total / 1000 / 60 / 60) % 24);
-    return { total, hours, minutes, seconds };
-  };
+   return { total, hours, minutes, seconds };
+ };
 
-  useEffect(() => {
-    let interval;
-    if (timerActive) {
-      const endTime = new Date(Date.now() + (isBreakTime ? breakDuration : focusDuration) * 1000);
-      interval = setInterval(() => {
-        const remainingTime = getTimeRemaining(endTime);
-        if (remainingTime.total <= 0) {
-          clearInterval(interval);
-          setTimerActive(false);
-          setIsBreakTime(!isBreakTime); // Toggle between focus and break time
-          // Start the next session automatically
-          setTimerActive(true);
-        } else {
-          setTime(remainingTime);
-        }
-      }, 1000);
-    } else {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [timerActive, focusDuration, breakDuration, isBreakTime]);
+ useEffect(() => {
+   let interval;
+   if (timerActive) {
+     const endTime = new Date(
+       Date.now() + (isBreakTime ? breakDuration : focusDuration) * 1000
+     );
+     interval = setInterval(() => {
+       const remainingTime = getTimeRemaining(endTime);
+       if (remainingTime.total <= 0) {
+         clearInterval(interval);
+         setTimerActive(false);
+         setIsBreakTime(!isBreakTime); // Toggle between focus and break time
+         // Start the next session automatically
+         setTimerActive(true);
+       } else {
+         setTime(remainingTime);
+       }
+     }, 1000);
+   } else {
+     clearInterval(interval);
+   }
+   return () => clearInterval(interval);
+ }, [timerActive, focusDuration, breakDuration, isBreakTime]);
 
-  const startTimer = () => {
-    setTimerActive(true);
-  };
+ const startTimer = () => {
+   setTimerActive(true);
+ };
 
-  const stopTimer = () => {
-    setTimerActive(false);
-    setTime({ hours: 0, minutes: 0, seconds: 0 });
-  };
+ const stopTimer = () => {
+   setTimerActive(false);
+   setTime({ hours: 0, minutes: 0, seconds: 0 });
+ };
 
-  const handleFocusDurationChange = (event) => {
-    const duration = parseInt(event.target.value, 10) * 60; // Convert minutes to seconds
-    setFocusDuration(duration);
-  };
+ const handleFocusDurationChange = (event) => {
+   const duration = parseInt(event.target.value, 10) * 60; // Convert minutes to seconds
+   setFocusDuration(duration);
+ };
 
-  const handleBreakDurationChange = (event) => {
-    const duration = parseInt(event.target.value, 10) * 60; // Convert minutes to seconds
-    setBreakDuration(duration);
-  };
+ const handleBreakDurationChange = (event) => {
+   const duration = parseInt(event.target.value, 10) * 60; // Convert minutes to seconds
+   setBreakDuration(duration);
+ };
 
-  return (
-    <div
-      className="timer-container"
-      style={{ top: position.y, left: position.x }}
-      onMouseDown={handleMouseDown}
-    >
-      <h1 className="timer-heading">{timerActive ? (isBreakTime ? "Break" : "Focus Time") : "Pomodoro Timer"}</h1>
-      <div className="timer">
-        {String(time.hours).padStart(2, "0")}:
-        {String(time.minutes).padStart(2, "0")}:
-        {String(time.seconds).padStart(2, "0")}
-      </div>
-      <div className="timer-inputs">
-        <label htmlFor="focusDuration">Focus Duration (minutes):</label>
-        <input
-          type="number"
-          id="focusDuration"
-          value={focusDuration / 60}
-          onChange={handleFocusDurationChange}
-        />
-      </div>
-      <div className="timer-inputs">
-        <label htmlFor="breakDuration">Break Duration (minutes):</label>
-        <input
-          type="number"
-          id="breakDuration"
-          value={breakDuration / 60}
-          onChange={handleBreakDurationChange}
-        />
-      </div>
-      <div className="timer-buttons">
-        <button onClick={startTimer}>Start Timer</button>
-        <button onClick={stopTimer}>Stop Timer</button>
-      </div>
-    </div>
-  );
+ return (
+   <div
+     className="timer-container"
+     style={{ top: position.y, left: position.x }}
+     onMouseDown={handleMouseDown}
+   >
+     <h1 className="timer-heading">
+       {timerActive
+         ? isBreakTime
+           ? "Break"
+           : "Focus Time"
+         : "Pomodoro Timer"}
+     </h1>
+     <div className="timer">
+       {String(time.hours).padStart(2, "0")}:
+       {String(time.minutes).padStart(2, "0")}:
+       {String(time.seconds).padStart(2, "0")}
+     </div>
+     <div className="timer-inputs">
+       <label htmlFor="focusDuration">Focus Duration (minutes):</label>
+       <input
+         type="number"
+         id="focusDuration"
+         value={focusDuration / 60}
+         onChange={handleFocusDurationChange}
+       />
+     </div>
+     <div className="timer-inputs">
+       <label htmlFor="breakDuration">Break Duration (minutes):</label>
+       <input
+         type="number"
+         id="breakDuration"
+         value={breakDuration / 60}
+         onChange={handleBreakDurationChange}
+       />
+     </div>
+     <div className="timer-buttons">
+       <button onClick={startTimer}>Start Timer</button>
+       <button onClick={stopTimer}>Stop Timer</button>
+     </div>
+   </div>
+ );
 }
