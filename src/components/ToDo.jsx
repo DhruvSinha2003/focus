@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { FaListAlt } from "react-icons/fa";
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
-  const [showPanel, setShowPanel] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const panelRef = useRef(null);
 
-  const addTodo = () => {
+  const togglePanel = () => {
+    setPanelOpen(!panelOpen);
+  };
+
+  const addTodo = (e) => {
+    e.preventDefault();
     if (newTodo.trim()) {
       setTodos([...todos, { text: newTodo.trim(), completed: false }]);
       setNewTodo("");
@@ -31,59 +38,67 @@ const TodoList = () => {
 
   return (
     <div>
-      <button
-        style={{ position: "fixed", top: "20px", right: "20px" }}
-        onClick={() => setShowPanel(!showPanel)}
+      <div
+        style={{
+          position: "fixed",
+          top: "20px",
+          right: panelOpen ? "320px" : "20px",
+          transition: "right 0.3s ease-in-out",
+        }}
       >
-        Todo
-      </button>
-      {showPanel && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            right: 0,
-            height: "100vh",
-            width: "300px",
-            backgroundColor: "white",
-            padding: "20px",
-            boxShadow: "-2px 0 10px rgba(0, 0, 0, 0.2)",
-          }}
-        >
-          <h2>Todo List</h2>
+        <button onClick={togglePanel}>
+          <FaListAlt />
+        </button>
+      </div>
+      <div
+        ref={panelRef}
+        style={{
+          position: "fixed",
+          top: 0,
+          right: panelOpen ? 0 : "-320px",
+          height: "100vh",
+          width: "300px",
+          backgroundColor: "white",
+          padding: "20px",
+          boxShadow: "-2px 0 10px rgba(0, 0, 0, 0.2)",
+          transition: "right 0.3s ease-in-out",
+        }}
+      >
+        <h2>Todo List</h2>
+        <form onSubmit={addTodo}>
           <input
             type="text"
             value={newTodo}
             onChange={(e) => setNewTodo(e.target.value)}
-            placeholder="Add new todo"
+            placeholder="Todo item"
           />
-          <button onClick={addTodo}>Add</button>
-          <ul>
-            {todos.map((todo, index) => (
-              <li key={index}>
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  onChange={() => toggleComplete(index)}
-                />
-                {todo.completed ? (
-                  <span style={{ textDecoration: "line-through" }}>
-                    {todo.text}
-                  </span>
-                ) : (
-                  <span>{todo.text}</span>
-                )}
-                <button onClick={() => removeTodo(index)}>Remove</button>
-                <input
-                  type="text"
-                  defaultValue={todo.text}
-                  onBlur={(e) => editTodo(index, e.target.value)}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+          <button type="submit">Add</button>
+        </form>
+        <ul>
+          {todos.map((todo, index) => (
+            <li key={index}>
+              <input
+                type="checkbox"
+                checked={todo.completed}
+                onChange={() => toggleComplete(index)}
+              />
+              {todo.completed ? (
+                <span style={{ textDecoration: "line-through" }}>
+                  {todo.text}
+                </span>
+              ) : (
+                <span>{todo.text}</span>
+              )}
+              <button onClick={() => removeTodo(index)}>Remove</button>
+              <input
+                type="text"
+                defaultValue={todo.text}
+                onBlur={(e) => editTodo(index, e.target.value)}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
