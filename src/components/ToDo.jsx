@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { MdMenu } from "react-icons/md";
+import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 
 export default function ToDo() {
   return (
     <div>
-      <MdMenu />
+      <Sidebar>
+        <Menu>
+          <MenuItem>TO DO List</MenuItem>
+        </Menu>
+      </Sidebar>
     </div>
   );
 }
