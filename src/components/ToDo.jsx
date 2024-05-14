@@ -7,10 +7,6 @@ export default function ToDo() {
       <Sidebar>
         <Menu>
           <MenuItem>TO DO List</MenuItem>
-          <MenuItem>TO DO List</MenuItem>
-          <MenuItem>TO DO List</MenuItem>
-          <MenuItem>TO DO List</MenuItem>
-          <MenuItem>TO DO List</MenuItem>
         </Menu>
       </Sidebar>
     </div>
