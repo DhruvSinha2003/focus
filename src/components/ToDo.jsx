@@ -4,7 +4,7 @@ import "./components.css";
 
 export default function ToDo() {
   const [newItem, setNewItem] = useState("");
-  const [items, setItems] = useState(["Pie charts", "Line charts"]);
+  const [items, setItems] = useState(["Write a todo item and press enter"]);
   const [position, setPosition] = useState({
     x: window.innerWidth - 320, // Adjusted to align with right edge
     y: 10, // Top alignment
