@@ -17,12 +17,27 @@ export default function ToDo() {
     }
   };
 
+  const handleDeleteItem = (index) => {
+    const updatedItems = items.filter((item, i) => i !== index);
+    setItems(updatedItems);
+  };
+
   return (
     <Sidebar>
       <Menu>
         <SubMenu label="To Do List">
           {items.map((item, index) => (
-            <MenuItem key={index}>{item}</MenuItem>
+            <MenuItem key={index}>
+              <div className="menu-item-content">
+                {item}
+                <button
+                  onClick={() => handleDeleteItem(index)}
+                  className="delete-button"
+                >
+                  ✓
+                </button>
+              </div>
+            </MenuItem>
           ))}
         </SubMenu>
         <div className="input-container">

@@ -119,13 +119,20 @@
   background-color: #0056b3;
 }
 
-.sidebar {
-  width: 250px;
-}
-
-.menu-item {
+.menu-item-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px;
+}
+
+.delete-button {
+  background-color: transparent;
+  border: none;
+  color: green;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.delete-button:hover {
+  color: darkgreen;
 }
