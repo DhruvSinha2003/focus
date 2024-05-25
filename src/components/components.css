@@ -91,3 +91,41 @@
 .fullscreen-button {
   margin-left: 10px; /* Add margin to separate from the minimize button */
 }
+/* ToDo.css */
+.input-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-button:hover {
+  background-color: #0056b3;
+}
+
+.sidebar {
+  width: 250px;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+}
