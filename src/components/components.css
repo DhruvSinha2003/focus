@@ -89,21 +89,34 @@
 }
 
 .fullscreen-button {
-  margin-left: 10px; /* Add margin to separate from the minimize button */
+  margin-left: 10px;
 }
-/* ToDo.css */
+/* components.css */
+.todo-container {
+  position: fixed;
+  width: 300px;
+  height: auto;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  cursor: move;
+  padding: 0; /* Remove extra padding */
+}
+
 .input-container {
   display: flex;
   align-items: center;
-  margin: 10px 0;
+  width: 100%;
 }
 
 .todo-input {
-  flex: 1;
+  flex-grow: 1;
   padding: 8px;
-  margin-right: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  margin-right: 10px;
+  box-sizing: border-box;
 }
 
 .add-button {
@@ -113,6 +126,7 @@
   color: white;
   border-radius: 4px;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .add-button:hover {
