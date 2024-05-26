@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Menu, MenuItem, Sidebar, SubMenu } from "react-pro-sidebar";
-import "./components.css";
+import "react-pro-sidebar/dist/css/styles.css";
 
 export default function ToDo() {
   const [newItem, setNewItem] = useState("");
@@ -85,18 +85,18 @@ export default function ToDo() {
   };
 
   return (
-    <div
-      className="todo-container"
-      style={{ top: position.y, left: position.x }}
-      onMouseDown={handleMouseDown}
-    >
-      <Sidebar>
+    <div>
+      <Sidebar
+        className="todo-container"
+        style={{ top: position.y, left: position.x }}
+        onMouseDown={handleMouseDown}
+      >
         <Menu>
-          <SubMenu label="To Do List">
+          <SubMenu label="To Do List" className="todo-submenu">
             {items.map((item, index) => (
-              <MenuItem key={index}>
+              <MenuItem key={index} className="todo-item">
                 <div className="menu-item-content">
-                  {item}
+                  <div className="todo-text">{item}</div>
                   <button
                     onClick={() => handleDeleteItem(index)}
                     className="delete-button"

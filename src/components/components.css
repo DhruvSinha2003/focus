@@ -96,12 +96,14 @@
   position: fixed;
   width: 300px;
   height: auto;
+  max-height: 400px; /* Add a max-height to limit the container height */
   background-color: #f0f0f0;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   cursor: move;
   padding: 0; /* Remove extra padding */
+  overflow-y: auto; /* Add a scrollbar for vertical overflow */
 }
 
 .input-container {
@@ -131,22 +133,4 @@
 
 .add-button:hover {
   background-color: #0056b3;
-}
-
-.menu-item-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.delete-button {
-  background-color: transparent;
-  border: none;
-  color: green;
-  cursor: pointer;
-  font-size: 18px;
-}
-
-.delete-button:hover {
-  color: darkgreen;
 }
