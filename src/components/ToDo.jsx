@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Menu, MenuItem, Sidebar, SubMenu } from "react-pro-sidebar";
-import "react-pro-sidebar/dist/css/styles.css";
 
 export default function ToDo() {
   const [newItem, setNewItem] = useState("");

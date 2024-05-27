@@ -5,7 +5,7 @@ import TodoList from "./components/ToDo";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{ background: "orange" }}>
       <TodoList />
       <Timer />
       <Background />
