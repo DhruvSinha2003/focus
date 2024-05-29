@@ -134,3 +134,44 @@
 .add-button:hover {
   background-color: #0056b3;
 }
+
+.music-player-container {
+  position: fixed;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  cursor: move;
+}
+
+.music-player-heading {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.music-player-select {
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.music-player-buttons {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.music-player-buttons button {
+  margin-right: 10px;
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.music-player-buttons button:hover {
+  background-color: #0056b3;
+}
