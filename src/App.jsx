@@ -6,6 +6,7 @@ import TodoList from "./components/ToDo";
 function App() {
   return (
     <div className="App">
+      <MusicPlayer />
       <TodoList />
       <Timer />
       <Background />
