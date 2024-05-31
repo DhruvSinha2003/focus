@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import React, { useEffect, useRef, useState } from "react";
 import ReactHowler from "react-howler";
 
 // Import audio files
@@ -20,30 +21,23 @@ const MusicPlayer = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 50, y: 50 });
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [seek, setSeek] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const playerRef = useRef(null);
 
   useEffect(() => {
     setAudioFiles(audioFilesMappings[selectedFolder]);
+    setCurrentAudioIndex(0);
   }, [selectedFolder]);
 
   const handleFolderChange = (e) => {
     setSelectedFolder(e.target.value);
-    setCurrentAudioIndex(0);
+    setIsPlaying(false);
   };
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
-  };
-
-  const handlePrevious = () => {
-    setCurrentAudioIndex((prevIndex) =>
-      prevIndex === 0 ? audioFiles.length - 1 : prevIndex - 1
-    );
-  };
-
-  const handleNext = () => {
-    setCurrentAudioIndex((prevIndex) =>
-      prevIndex === audioFiles.length - 1 ? 0 : prevIndex + 1
-    );
   };
 
   const handleMouseDown = (event) => {
@@ -58,11 +52,11 @@ const MusicPlayer = () => {
     if (isDragging) {
       const newX = Math.max(
         0,
-        Math.min(event.clientX - offset.x, window.innerWidth - 300)
+        Math.min(event.clientX - offset.x, window.innerWidth - 250)
       );
       const newY = Math.max(
         0,
-        Math.min(event.clientY - offset.y, window.innerHeight - 150)
+        Math.min(event.clientY - offset.y, window.innerHeight - 250)
       );
       setPosition({ x: newX, y: newY });
     }
@@ -90,10 +84,23 @@ const MusicPlayer = () => {
     };
   }, [isDragging, offset]);
 
+  const handleOnLoad = () => {
+    setDuration(playerRef.current.duration());
+  };
+
+  const handleOnEnd = () => {
+    setIsPlaying(false);
+  };
+
+  const handleSeekChange = (seek, duration) => {
+    setSeek(seek);
+    setDuration(duration);
+  };
+
   return (
     <div
       className="music-player-container"
-      style={{ top: position.y, left: position.x }}
+      style={{ top: position.y, left: position.x, width: "250px" }}
       onMouseDown={handleMouseDown}
     >
       <h2 className="music-player-heading">Music Player</h2>
@@ -106,23 +113,48 @@ const MusicPlayer = () => {
         <option value="cafe_ambient">Cafe Ambient</option>
         <option value="brown_noise">Brown Noise</option>
       </select>
-      <div className="music-player-buttons">
-        <button onClick={handlePrevious}>Previous</button>
+      <div className="music-player-controls">
         <button onClick={handlePlayPause}>
-          {isPlaying ? "Pause" : "Play"}
+          {isPlaying ? (
+            <i className="fas fa-pause"></i>
+          ) : (
+            <i className="fas fa-play"></i>
+          )}
         </button>
-        <button onClick={handleNext}>Next</button>
+      </div>
+      <div className="playback-bar">
+        <div className="progress-bar-container">
+          <div
+            className="progress-bar"
+            style={{ width: `${(seek / duration) * 100}%` }}
+          ></div>
+        </div>
+        <div className="progress-time-container">
+          <span className="progress-time">{`${formatTime(seek)} / ${formatTime(
+            duration
+          )}`}</span>
+        </div>
       </div>
       {audioFiles.length > 0 && (
         <ReactHowler
+          ref={playerRef}
           src={audioFiles[currentAudioIndex]}
           playing={isPlaying}
           html5={true}
           preload={true}
+          onLoad={handleOnLoad}
+          onEnd={handleOnEnd}
+          onSeekChange={handleSeekChange}
         />
       )}
     </div>
   );
+};
+
+const formatTime = (time) => {
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+  return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 };
 
 export default MusicPlayer;
