@@ -1,6 +1,6 @@
 # Focus Web App
 
-Welcome to the Focus Web App! This application is designed to help users enhance their focus through various tools like a Pomodoro timer, background music, and a to-do list and also change the background image. Check out the live version of the app [here](https://focus-7fom0umk3-dhruv-sinhas-projects.vercel.app).
+Welcome to the Focus Web App! This application is designed to help users enhance their focus through various tools like a Pomodoro timer, background music, and a to-do list and also change the background image. Check out the live version of the app [here](https://focus-dhruv-sinhas-projects.vercel.app/).
 
 ## Features
 
@@ -11,7 +11,7 @@ Welcome to the Focus Web App! This application is designed to help users enhance
 
 ## Deployment
 
-The app is deployed on Vercel. You can access it [here](https://focus-7fom0umk3-dhruv-sinhas-projects.vercel.app).
+The app is deployed on Vercel. You can access it [here](https://focus-dhruv-sinhas-projects.vercel.app/).
 
 ## Getting Started
 
