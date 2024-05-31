@@ -2,6 +2,14 @@
 
 Welcome to the Focus Web App! This application is designed to help users enhance their focus through various tools like a Pomodoro timer, background music, and a to-do list and also change the background image. Check out the live version of the app [here](https://focus-dhruv-sinhas-projects.vercel.app/).
 
+##Video Demonstration
+
+
+
+https://github.com/DhruvSinha2003/focus/assets/120670739/32094d90-a972-4fdd-b542-89b05f9f174f
+
+
+
 ## Features
 
 - **Pomodoro Timer**: Manage your work and break intervals using the Pomodoro technique.
