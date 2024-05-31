@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import ReactHowler from "react-howler";
 
 // Import audio files
-import * as brownNoiseFiles from "../music/brown_noise/01-03 Stage 1- Late Afternoon Drifting.mp3";
-import * as cafeAmbientFiles from "../music/cafe_ambient/01-01 Stage 1- It's Just a Burning Memory.mp3";
-import * as lofiFiles from "../music/lofi/01-02 Stage 1- We Don't Have Many Days.mp3";
+import * as brownNoiseFiles from "../music/brown_noise/brown_noise.mp3";
+import * as cafeAmbientFiles from "../music/cafe_ambient/jazz_cafe.mp3";
+import * as lofiFiles from "../music/lofi/lofi.mp3";
 
 const audioFilesMappings = {
   lofi: Object.values(lofiFiles),

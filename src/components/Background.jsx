@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { FiMaximize } from "react-icons/fi";
-import a from "../assets/images/a.png";
-import b from "../assets/images/b.jpg";
+import a from "../assets/images/a.jpg";
+import b from "../assets/images/b.png";
 import c from "../assets/images/c.jpg";
 import d from "../assets/images/d.jpg";
-import e from "../assets/images/e.png";
+import e from "../assets/images/e.jpg";
 import "./components.css";
 
 const Background = () => {
   const [backgroundImage, setBackgroundImage] = useState("");
   const defaultImages = [a, b, c, d, e];
   const [menuExpanded, setMenuExpanded] = useState(true);
-  const [position, setPosition] = useState({ x: 20, y: window.innerHeight - 220 });
+  const [position, setPosition] = useState({
+    x: 20,
+    y: window.innerHeight - 220,
+  });
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
@@ -28,8 +31,14 @@ const Background = () => {
 
   const handleMouseMove = (event) => {
     if (isDragging) {
-      const newX = Math.max(0, Math.min(event.clientX - offset.x, window.innerWidth - componentWidth));
-      const newY = Math.max(0, Math.min(event.clientY - offset.y, window.innerHeight - componentHeight));
+      const newX = Math.max(
+        0,
+        Math.min(event.clientX - offset.x, window.innerWidth - componentWidth)
+      );
+      const newY = Math.max(
+        0,
+        Math.min(event.clientY - offset.y, window.innerHeight - componentHeight)
+      );
       setPosition({
         x: newX,
         y: newY,
@@ -131,7 +140,10 @@ const Background = () => {
           <div>
             <h1 className="timer-heading">Select Background</h1>
             <div>{defaultImageThumbnails}</div>
-            <button className="minimize-button" onClick={() => setMenuExpanded(!menuExpanded)}>
+            <button
+              className="minimize-button"
+              onClick={() => setMenuExpanded(!menuExpanded)}
+            >
               Minimize
             </button>
           </div>
