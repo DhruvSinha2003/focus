@@ -29,6 +29,7 @@ const MusicPlayer = () => {
   useEffect(() => {
     setAudioFiles(audioFilesMappings[selectedFolder]);
     setCurrentAudioIndex(0);
+    setIsPlaying(false);
   }, [selectedFolder]);
 
   const handleFolderChange = (e) => {
@@ -84,17 +85,35 @@ const MusicPlayer = () => {
     };
   }, [isDragging, offset]);
 
+  useEffect(() => {
+    if (isPlaying) {
+      const interval = setInterval(() => {
+        if (playerRef.current) {
+          setSeek(playerRef.current.seek());
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [isPlaying]);
+
   const handleOnLoad = () => {
     setDuration(playerRef.current.duration());
   };
 
   const handleOnEnd = () => {
-    setIsPlaying(false);
+    if (currentAudioIndex < audioFiles.length - 1) {
+      setCurrentAudioIndex(currentAudioIndex + 1);
+    } else {
+      setCurrentAudioIndex(0);
+      setIsPlaying(false);
+    }
   };
 
-  const handleSeekChange = (seek, duration) => {
-    setSeek(seek);
-    setDuration(duration);
+  const handleSeekChange = (event) => {
+    const newTime = (event.target.value / 100) * duration;
+    setSeek(newTime);
+    playerRef.current.seek(newTime);
   };
 
   return (
@@ -124,10 +143,13 @@ const MusicPlayer = () => {
       </div>
       <div className="playback-bar">
         <div className="progress-bar-container">
-          <div
-            className="progress-bar"
-            style={{ width: `${(seek / duration) * 100}%` }}
-          ></div>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={(seek / duration) * 100}
+            onChange={handleSeekChange}
+          />
         </div>
         <div className="progress-time-container">
           <span className="progress-time">{`${formatTime(seek)} / ${formatTime(
@@ -144,7 +166,6 @@ const MusicPlayer = () => {
           preload={true}
           onLoad={handleOnLoad}
           onEnd={handleOnEnd}
-          onSeekChange={handleSeekChange}
         />
       )}
     </div>
