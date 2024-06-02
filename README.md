@@ -4,11 +4,7 @@ Welcome to the Focus Web App! This application is designed to help users enhance
 
 ## Video Demonstration
 
-
-
 https://github.com/DhruvSinha2003/focus/assets/120670739/32094d90-a972-4fdd-b542-89b05f9f174f
-
-
 
 ## Features
 
