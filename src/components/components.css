@@ -122,15 +122,51 @@ body {
 .todo-container {
   position: fixed;
   width: 300px;
-  height: auto;
-  max-height: 400px;
   background-color: rgba(240, 240, 240, 0.8);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   cursor: move;
-  padding: 0;
   overflow-y: auto;
+}
+
+.todo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  background-color: rgba(240, 240, 240, 0.8); /* Transparent background */
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.todo-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.todo-header .arrow {
+  font-size: 16px;
+  transition: transform 0.3s;
+}
+
+.todo-header .arrow.down {
+  transform: rotate(0deg);
+}
+
+.todo-header .arrow.up {
+  transform: rotate(180deg);
+}
+
+.todo-content {
+  padding: 10px;
+  display: none;
+}
+
+.todo-content.expanded {
+  display: block;
 }
 
 .input-container {
@@ -162,6 +198,27 @@ body {
   background-color: #0056b3;
 }
 
+.todo-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.delete-button {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
 /* Music Player Component */
 .music-player-container {
   position: fixed;
