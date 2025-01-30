@@ -10,8 +10,8 @@ const Timer = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
   const [position, setPosition] = useState({
-    x: (window.innerWidth - 300) / 2,
-    y: (window.innerHeight - 400) / 2,
+    x: window.innerWidth - 520,
+    y: 174,
   });
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);

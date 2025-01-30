@@ -108,11 +108,6 @@ body {
 }
 
 /* Background Component */
-.background-container {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-}
 
 .background-image {
   width: 100%;
@@ -122,24 +117,43 @@ body {
 }
 
 .background-menu {
-  position: absolute; /* Changed to absolute for better positioning */
+  position: absolute;
   bottom: 24px;
   left: 24px;
   padding: 20px;
   min-width: 320px;
-  border-radius: 12px; /* Added border-radius for aesthetics */
-  transition: all 0.3s ease; /* Smooth transition for minimization */
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex; /* Use flexbox for alignment */
+  flex-direction: column; /* Stack items vertically */
 }
 
 .background-menu.minimized {
   min-width: auto;
   padding: 12px;
-  border-radius: 50%; /* Circular shape when minimized */
-  width: 40px; /* Fixed width for minimized state */
-  height: 40px; /* Fixed height for minimized state */
-  display: flex; /* Center the icon */
-  align-items: center; /* Center the icon vertically */
-  justify-content: center; /* Center the icon horizontally */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.background-type-selector {
+  display: flex; /* Use flexbox for horizontal alignment */
+  gap: 8px; /* Space between buttons */
+  margin-top: 8px; /* Space above the buttons */
+}
+
+.background-type-selector button {
+  margin-left: 8px; /* Space between minimize button and type buttons */
+}
+
+.background-container {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  transition: height 0.3s ease; /* Smooth transition for height change */
 }
 
 .background-controls {
@@ -170,6 +184,32 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.type-button {
+  padding: 8px 16px; /* Reduced padding for a slimmer look */
+  border: none;
+  border-radius: 4px; /* Slightly smaller border-radius */
+  background: rgba(255, 255, 255, 0.1); /* Darker background for contrast */
+  color: white;
+  font-weight: 500;
+  font-size: 14px; /* Adjusted font size for a more modern look */
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s; /* Added transform for hover effect */
+}
+
+.type-button:hover {
+  background: rgba(255, 255, 255, 0.2); /* Slightly darker on hover */
+  transform: scale(1.05); /* Slightly scale up on hover */
+}
+
+.type-button.active {
+  background: rgba(
+    255,
+    255,
+    255,
+    0.3
+  ); /* Adjusted active state for better visibility */
 }
 
 .color-picker-container {
