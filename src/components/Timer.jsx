@@ -17,7 +17,8 @@ const Timer = () => {
   const [isDragging, setIsDragging] = useState(false);
 
   const componentWidth = 300;
-  const componentHeight = 400;
+  const componentHeight = 300;
+  const playHeight = 250;
 
   useEffect(() => {
     const handleMouseMove = (event) => {
@@ -90,7 +91,7 @@ const Timer = () => {
         left: position.x,
         top: position.y,
         width: componentWidth,
-        height: componentHeight,
+        height: isRunning ? playHeight : componentHeight,
         cursor: isDragging ? "grabbing" : "grab",
       }}
       onMouseDown={handleMouseDown}

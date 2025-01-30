@@ -15,8 +15,8 @@ const Background = () => {
   const defaultImages = [a, b, c, d, e];
 
   const [position, setPosition] = useState({
-    x: 20,
-    y: window.innerHeight - 100,
+    x: window.innerWidth - 365,
+    y: 615,
   });
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -67,45 +67,6 @@ const Background = () => {
       document.removeEventListener("selectstart", handleSelectStart);
     };
   }, [isDragging, offset]);
-
-  const toggleFullscreen = () => {
-    const doc = window.document;
-    const docEl = doc.documentElement;
-
-    const requestFullScreen =
-      docEl.requestFullscreen ||
-      docEl.mozRequestFullScreen ||
-      docEl.webkitRequestFullScreen ||
-      docEl.msRequestFullscreen;
-
-    const cancelFullScreen =
-      doc.exitFullscreen ||
-      doc.mozCancelFullScreen ||
-      docEl.webkitExitFullscreen ||
-      doc.msExitFullscreen;
-
-    if (!doc.fullscreenElement) {
-      requestFullScreen.call(docEl);
-    } else {
-      cancelFullScreen.call(doc);
-    }
-  };
-
-  const defaultImageThumbnails = defaultImages.map((image, index) => (
-    <img
-      key={index}
-      src={image}
-      alt={`Default Image ${index}`}
-      onClick={() => setBackgroundImage(image)}
-      style={{
-        cursor: "pointer",
-        width: "100px",
-        height: "100px",
-        objectFit: "cover",
-        margin: "5px",
-      }}
-    />
-  ));
 
   return (
     <div
