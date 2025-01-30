@@ -130,7 +130,7 @@ const MusicPlayer = () => {
       >
         <option value="lofi">Lofi</option>
         <option value="cafe_ambient">Cafe Ambient</option>
-        <option value="white_noise">white Noise</option>
+        <option value="white_noise">White Noise</option>
       </select>
       <div className="music-player-controls">
         <button onClick={handlePlayPause}>

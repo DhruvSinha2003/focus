@@ -46,7 +46,7 @@ To get a local copy up and running, follow these simple steps.
 
 ### Background Music
 
-- Choose from a selection of music folders: Lofi, Cafe Ambient, and Brown Noise.
+- Choose from a selection of music folders: Lofi, Cafe Ambient, and White Noise.
 - Play or pause the music as needed.
 - Use the seek bar to navigate through the track.
 
