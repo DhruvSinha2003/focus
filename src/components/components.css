@@ -275,6 +275,7 @@ body {
   border-radius: 8px;
   color: white;
   margin-bottom: 16px;
+  outline: "none";
 }
 
 .music-player-controls {
