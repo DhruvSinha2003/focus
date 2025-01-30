@@ -1,4 +1,3 @@
-import "./App.css";
 import Background from "./components/Background";
 import MusicPlayer from "./components/MusicPlayer";
 import Timer from "./components/Timer";
