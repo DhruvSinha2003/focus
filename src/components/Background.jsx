@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { FiMaximize } from "react-icons/fi";
+import React, { useEffect, useState } from "react";
+import { FiMaximize, FiMinimize2 } from "react-icons/fi";
 import a from "../assets/images/a.jpg";
 import b from "../assets/images/b.png";
 import c from "../assets/images/c.jpg";
@@ -8,18 +8,21 @@ import e from "../assets/images/e.jpg";
 import "./components.css";
 
 const Background = () => {
-  const [backgroundImage, setBackgroundImage] = useState("");
-  const defaultImages = [a, b, c, d, e];
+  const [backgroundType, setBackgroundType] = useState("image");
+  const [color, setColor] = useState("#1a1a1a");
+  const [backgroundImage, setBackgroundImage] = useState(a);
   const [menuExpanded, setMenuExpanded] = useState(true);
+  const defaultImages = [a, b, c, d, e];
+
   const [position, setPosition] = useState({
     x: 20,
-    y: window.innerHeight - 220,
+    y: window.innerHeight - 100,
   });
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
-  const componentWidth = 300; // Add this line
-  const componentHeight = 200; // Add this line
+  const componentWidth = 300;
+  const componentHeight = 200;
 
   const handleMouseDown = (event) => {
     const boundingBox = event.currentTarget.getBoundingClientRect();
@@ -39,10 +42,7 @@ const Background = () => {
         0,
         Math.min(event.clientY - offset.y, window.innerHeight - componentHeight)
       );
-      setPosition({
-        x: newX,
-        y: newY,
-      });
+      setPosition({ x: newX, y: newY });
     }
   };
 
@@ -53,34 +53,6 @@ const Background = () => {
   const handleSelectStart = (event) => {
     if (isDragging) {
       event.preventDefault();
-    }
-  };
-
-  const toggleFullscreen = () => {
-    const doc = window.document;
-    const docEl = doc.documentElement;
-
-    const requestFullScreen =
-      docEl.requestFullscreen ||
-      docEl.mozRequestFullScreen ||
-      docEl.webkitRequestFullScreen ||
-      docEl.msRequestFullscreen;
-
-    const cancelFullScreen =
-      doc.exitFullscreen ||
-      doc.mozCancelFullScreen ||
-      doc.webkitExitFullscreen ||
-      doc.msExitFullscreen;
-
-    if (
-      !doc.fullscreenElement &&
-      !doc.mozFullScreenElement &&
-      !doc.webkitFullscreenElement &&
-      !doc.msFullscreenElement
-    ) {
-      requestFullScreen.call(docEl);
-    } else {
-      cancelFullScreen.call(doc);
     }
   };
 
@@ -95,6 +67,29 @@ const Background = () => {
       document.removeEventListener("selectstart", handleSelectStart);
     };
   }, [isDragging, offset]);
+
+  const toggleFullscreen = () => {
+    const doc = window.document;
+    const docEl = doc.documentElement;
+
+    const requestFullScreen =
+      docEl.requestFullscreen ||
+      docEl.mozRequestFullScreen ||
+      docEl.webkitRequestFullScreen ||
+      docEl.msRequestFullscreen;
+
+    const cancelFullScreen =
+      doc.exitFullscreen ||
+      doc.mozCancelFullScreen ||
+      docEl.webkitExitFullscreen ||
+      doc.msExitFullscreen;
+
+    if (!doc.fullscreenElement) {
+      requestFullScreen.call(docEl);
+    } else {
+      cancelFullScreen.call(doc);
+    }
+  };
 
   const defaultImageThumbnails = defaultImages.map((image, index) => (
     <img
@@ -113,51 +108,99 @@ const Background = () => {
   ));
 
   return (
-    <div className="background-container">
-      {backgroundImage && (
+    <div
+      className={`draggable-component ${!menuExpanded ? "minimized" : ""}`}
+      style={{
+        position: "absolute",
+        left: position.x,
+        top: position.y,
+        width: componentWidth,
+        height: componentHeight,
+        cursor: isDragging ? "grabbing" : "grab",
+      }}
+      onMouseDown={handleMouseDown}
+    >
+      {backgroundType === "image" ? (
+        <div className="background-container">
+          <img
+            src={backgroundImage}
+            alt="Background"
+            className="background-image"
+          />
+        </div>
+      ) : (
         <div
-          className="background-image"
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            width: "100vw",
-            height: "100vh",
-            position: "fixed",
-            top: 0,
-            left: 0,
-            zIndex: -1,
-          }}
+          className="background-container"
+          style={{ backgroundColor: color }}
         />
       )}
+
       <div
-        className="background-menu"
-        style={{ top: position.y, left: position.x }}
-        onMouseDown={handleMouseDown}
+        className={`glass-panel background-menu ${
+          !menuExpanded ? "minimized" : ""
+        }`}
       >
         {menuExpanded ? (
-          <div>
-            <h1 className="timer-heading">Select Background</h1>
-            <div>{defaultImageThumbnails}</div>
-            <button
-              className="minimize-button"
-              onClick={() => setMenuExpanded(!menuExpanded)}
-            >
-              Minimize
-            </button>
-          </div>
+          <>
+            <div className="background-header">
+              <h2>Background Settings</h2>
+              <button
+                className="icon-button"
+                onClick={() => setMenuExpanded(false)}
+              >
+                <FiMinimize2 />
+              </button>
+            </div>
+
+            <div className="background-type-selector">
+              <button
+                className={`type-button ${
+                  backgroundType === "image" ? "active" : ""
+                }`}
+                onClick={() => setBackgroundType("image")}
+              >
+                Images
+              </button>
+              <button
+                className={`type-button ${
+                  backgroundType === "color" ? "active" : ""
+                }`}
+                onClick={() => setBackgroundType("color")}
+              >
+                Solid Color
+              </button>
+            </div>
+
+            {backgroundType === "image" ? (
+              <div className="background-controls">
+                {defaultImages.map((image, index) => (
+                  <div
+                    key={index}
+                    className={`background-thumbnail ${
+                      backgroundImage === image ? "active" : ""
+                    }`}
+                    onClick={() => setBackgroundImage(image)}
+                  >
+                    <img src={image} alt={`Background ${index + 1}`} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="color-picker-container">
+                <input
+                  type="color"
+                  value={color}
+                  onChange={(e) => setColor(e.target.value)}
+                  className="color-picker"
+                />
+              </div>
+            )}
+          </>
         ) : (
-          <button
-            className="change-background-button"
-            onClick={() => setMenuExpanded(true)}
-          >
-            Change Background
+          <button className="icon-button" onClick={() => setMenuExpanded(true)}>
+            <FiMaximize />
           </button>
         )}
-        <button className="fullscreen-button" onClick={toggleFullscreen}>
-          <FiMaximize />
-        </button>
       </div>
     </div>
   );

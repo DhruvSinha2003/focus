@@ -1,11 +1,10 @@
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import React, { useEffect, useRef, useState } from "react";
 import ReactHowler from "react-howler";
 
 // Import audio files
-import * as whiteNoiseFiles from "../music/white_noise/white_noise.mp3";
 import * as cafeAmbientFiles from "../music/cafe_ambient/jazz_cafe.mp3";
 import * as lofiFiles from "../music/lofi/lofi.mp3";
+import * as whiteNoiseFiles from "../music/white_noise/white_noise.mp3";
 
 const audioFilesMappings = {
   lofi: Object.values(lofiFiles),
@@ -19,7 +18,10 @@ const MusicPlayer = () => {
   const [currentAudioIndex, setCurrentAudioIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [position, setPosition] = useState({ x: 50, y: 50 });
+  const [position, setPosition] = useState({
+    x: window.innerWidth - 344,
+    y: window.innerHeight - 200,
+  });
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [seek, setSeek] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -49,25 +51,25 @@ const MusicPlayer = () => {
     setIsDragging(true);
   };
 
-  const handleMouseMove = (event) => {
-    if (isDragging) {
-      const newX = Math.max(
-        0,
-        Math.min(event.clientX - offset.x, window.innerWidth - 250)
-      );
-      const newY = Math.max(
-        0,
-        Math.min(event.clientY - offset.y, window.innerHeight - 250)
-      );
-      setPosition({ x: newX, y: newY });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
   useEffect(() => {
+    const handleMouseMove = (event) => {
+      if (isDragging) {
+        const newX = Math.max(
+          0,
+          Math.min(event.clientX - offset.x, window.innerWidth - 320)
+        );
+        const newY = Math.max(
+          0,
+          Math.min(event.clientY - offset.y, window.innerHeight - 200)
+        );
+        setPosition({ x: newX, y: newY });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
     const handleSelectStart = (event) => {
       if (isDragging) {
         event.preventDefault();
@@ -116,13 +118,28 @@ const MusicPlayer = () => {
     playerRef.current.seek(newTime);
   };
 
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
   return (
     <div
-      className="music-player-container"
-      style={{ top: position.y, left: position.x, width: "250px" }}
-      onMouseDown={handleMouseDown}
+      className="music-player-container glass-panel"
+      style={{
+        transform: `translate(${position.x}px, ${position.y}px)`,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "320px",
+        height: "250px",
+      }}
     >
-      <h2 className="music-player-heading">Music Player</h2>
+      <div className="music-player-heading" onMouseDown={handleMouseDown}>
+        <h2>Music Player</h2>
+      </div>
+
       <select
         className="music-player-select"
         value={selectedFolder}
@@ -132,31 +149,41 @@ const MusicPlayer = () => {
         <option value="cafe_ambient">Cafe Ambient</option>
         <option value="white_noise">White Noise</option>
       </select>
+
       <div className="music-player-controls">
-        <button onClick={handlePlayPause}>
-          {isPlaying ? (
-            <i className="fas fa-pause"></i>
-          ) : (
-            <i className="fas fa-play"></i>
-          )}
+        <button className="icon-button" onClick={handlePlayPause}>
+          <i className={`fas fa-${isPlaying ? "pause" : "play"}`}></i>
         </button>
       </div>
+
       <div className="playback-bar">
         <div className="progress-bar-container">
+          <div
+            className="progress-bar"
+            style={{ width: `${(seek / duration) * 100}%` }}
+          />
           <input
             type="range"
             min="0"
             max="100"
-            value={(seek / duration) * 100}
+            value={(seek / duration) * 100 || 0}
             onChange={handleSeekChange}
+            style={{
+              width: "100%",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              opacity: 0.01,
+              cursor: "pointer",
+            }}
           />
         </div>
-        <div className="progress-time-container">
-          <span className="progress-time">{`${formatTime(seek)} / ${formatTime(
-            duration
-          )}`}</span>
+        <div className="progress-time">
+          <span>{formatTime(seek)}</span>
+          <span>{formatTime(duration)}</span>
         </div>
       </div>
+
       {audioFiles.length > 0 && (
         <ReactHowler
           ref={playerRef}
@@ -170,12 +197,6 @@ const MusicPlayer = () => {
       )}
     </div>
   );
-};
-
-const formatTime = (time) => {
-  const minutes = Math.floor(time / 60);
-  const seconds = Math.floor(time % 60);
-  return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 };
 
 export default MusicPlayer;

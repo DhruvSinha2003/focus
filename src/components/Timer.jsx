@@ -1,14 +1,14 @@
-// Timer.jsx
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { FiPause, FiPlay, FiSettings } from "react-icons/fi";
 import "./components.css";
 
-export default function PomodoroTimer() {
-  const [focusDuration, setFocusDuration] = useState(25 * 60);
-  const [breakDuration, setBreakDuration] = useState(5 * 60);
-  const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
-  const [timerActive, setTimerActive] = useState(false);
-  const [isBreakTime, setIsBreakTime] = useState(false);
-
+const Timer = () => {
+  const [showSettings, setShowSettings] = useState(true);
+  const [focusDuration, setFocusDuration] = useState(25);
+  const [breakDuration, setBreakDuration] = useState(5);
+  const [timeLeft, setTimeLeft] = useState(focusDuration * 60);
+  const [isRunning, setIsRunning] = useState(false);
+  const [isBreak, setIsBreak] = useState(false);
   const [position, setPosition] = useState({
     x: (window.innerWidth - 300) / 2,
     y: (window.innerHeight - 400) / 2,
@@ -16,18 +16,24 @@ export default function PomodoroTimer() {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
-  const componentWidth = 300; // Add this line
-  const componentHeight = 400; // Add this line
+  const componentWidth = 300;
+  const componentHeight = 400;
 
   useEffect(() => {
     const handleMouseMove = (event) => {
       if (isDragging) {
-        const newX = Math.max(0, Math.min(event.clientX - offset.x, window.innerWidth - componentWidth));
-        const newY = Math.max(0, Math.min(event.clientY - offset.y, window.innerHeight - componentHeight));
-        setPosition({
-          x: newX,
-          y: newY,
-        });
+        const newX = Math.max(
+          0,
+          Math.min(event.clientX - offset.x, window.innerWidth - componentWidth)
+        );
+        const newY = Math.max(
+          0,
+          Math.min(
+            event.clientY - offset.y,
+            window.innerHeight - componentHeight
+          )
+        );
+        setPosition({ x: newX, y: newY });
       }
     };
 
@@ -60,97 +66,95 @@ export default function PomodoroTimer() {
     setIsDragging(true);
   };
 
-  const getTimeRemaining = (endTime) => {
-    const total = Date.parse(endTime) - Date.parse(new Date());
-    const seconds = Math.floor((total / 1000) % 60);
-    const minutes = Math.floor((total / 1000 / 60) % 60);
-    const hours = Math.floor((total / 1000 / 60 / 60) % 24);
-   return { total, hours, minutes, seconds };
- };
+  useEffect(() => {
+    let interval;
+    if (isRunning && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft((time) => time - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsBreak(!isBreak);
+      setTimeLeft(isBreak ? focusDuration * 60 : breakDuration * 60);
+    }
+    return () => clearInterval(interval);
+  }, [isRunning, timeLeft, isBreak, focusDuration, breakDuration]);
 
- useEffect(() => {
-   let interval;
-   if (timerActive) {
-     const endTime = new Date(
-       Date.now() + (isBreakTime ? breakDuration : focusDuration) * 1000
-     );
-     interval = setInterval(() => {
-       const remainingTime = getTimeRemaining(endTime);
-       if (remainingTime.total <= 0) {
-         clearInterval(interval);
-         setTimerActive(false);
-         setIsBreakTime(!isBreakTime); // Toggle between focus and break time
-         // Start the next session automatically
-         setTimerActive(true);
-       } else {
-         setTime(remainingTime);
-       }
-     }, 1000);
-   } else {
-     clearInterval(interval);
-   }
-   return () => clearInterval(interval);
- }, [timerActive, focusDuration, breakDuration, isBreakTime]);
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
 
- const startTimer = () => {
-   setTimerActive(true);
- };
+  return (
+    <div
+      className="glass-panel timer-container slide-in"
+      style={{
+        position: "absolute",
+        left: position.x,
+        top: position.y,
+        width: componentWidth,
+        height: componentHeight,
+        cursor: isDragging ? "grabbing" : "grab",
+      }}
+      onMouseDown={handleMouseDown}
+    >
+      {showSettings ? (
+        <>
+          <h2 className="timer-heading">Pomodoro Timer</h2>
+          <div className="timer-inputs">
+            <label>Focus Duration (minutes)</label>
+            <input
+              type="number"
+              value={focusDuration}
+              onChange={(e) => setFocusDuration(parseInt(e.target.value))}
+            />
+          </div>
+          <div className="timer-inputs">
+            <label>Break Duration (minutes)</label>
+            <input
+              type="number"
+              value={breakDuration}
+              onChange={(e) => setBreakDuration(parseInt(e.target.value))}
+            />
+          </div>
+          <button
+            className="timer-button"
+            onClick={() => {
+              setShowSettings(false);
+              setTimeLeft(focusDuration * 60);
+              setIsRunning(true); // Start the timer when settings are saved
+            }}
+          >
+            Start Timer
+          </button>
+        </>
+      ) : (
+        <>
+          <div className="timer-display">
+            {String(minutes).padStart(2, "0")}:
+            {String(seconds).padStart(2, "0")}
+          </div>
+          <div className="timer-label">
+            {isBreak ? "Break Time" : "Focus Time"}
+          </div>
+          <div className="timer-controls">
+            <button
+              className="icon-button"
+              onClick={() => setIsRunning(!isRunning)}
+            >
+              {isRunning ? <FiPause /> : <FiPlay />}
+            </button>
+            <button
+              className="icon-button"
+              onClick={() => {
+                setShowSettings(true);
+                setIsRunning(false);
+              }}
+            >
+              <FiSettings />
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
- const stopTimer = () => {
-   setTimerActive(false);
-   setTime({ hours: 0, minutes: 0, seconds: 0 });
- };
-
- const handleFocusDurationChange = (event) => {
-   const duration = parseInt(event.target.value, 10) * 60; // Convert minutes to seconds
-   setFocusDuration(duration);
- };
-
- const handleBreakDurationChange = (event) => {
-   const duration = parseInt(event.target.value, 10) * 60; // Convert minutes to seconds
-   setBreakDuration(duration);
- };
-
- return (
-   <div
-     className="timer-container"
-     style={{ top: position.y, left: position.x }}
-     onMouseDown={handleMouseDown}
-   >
-     <h1 className="timer-heading">
-       {timerActive
-         ? isBreakTime
-           ? "Break"
-           : "Focus Time"
-         : "Pomodoro Timer"}
-     </h1>
-     <div className="timer">
-       {String(time.hours).padStart(2, "0")}:
-       {String(time.minutes).padStart(2, "0")}:
-       {String(time.seconds).padStart(2, "0")}
-     </div>
-     <div className="timer-inputs">
-       <label htmlFor="focusDuration">Focus Duration (minutes):</label>
-       <input
-         type="number"
-         id="focusDuration"
-         value={focusDuration / 60}
-         onChange={handleFocusDurationChange}
-       />
-     </div>
-     <div className="timer-inputs">
-       <label htmlFor="breakDuration">Break Duration (minutes):</label>
-       <input
-         type="number"
-         id="breakDuration"
-         value={breakDuration / 60}
-         onChange={handleBreakDurationChange}
-       />
-     </div>
-     <div className="timer-buttons">
-       <button onClick={startTimer}>Start Timer</button>
-       <button onClick={stopTimer}>Stop Timer</button>
-     </div>
-   </div>
- );
-}
+export default Timer;
