@@ -3,14 +3,14 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactHowler from "react-howler";
 
 // Import audio files
-import * as brownNoiseFiles from "../music/brown_noise/brown_noise.mp3";
+import * as whiteNoiseFiles from "../music/white_noise/white_noise.mp3";
 import * as cafeAmbientFiles from "../music/cafe_ambient/jazz_cafe.mp3";
 import * as lofiFiles from "../music/lofi/lofi.mp3";
 
 const audioFilesMappings = {
   lofi: Object.values(lofiFiles),
   cafe_ambient: Object.values(cafeAmbientFiles),
-  brown_noise: Object.values(brownNoiseFiles),
+  white_noise: Object.values(whiteNoiseFiles),
 };
 
 const MusicPlayer = () => {
@@ -130,7 +130,7 @@ const MusicPlayer = () => {
       >
         <option value="lofi">Lofi</option>
         <option value="cafe_ambient">Cafe Ambient</option>
-        <option value="brown_noise">Brown Noise</option>
+        <option value="white_noise">white Noise</option>
       </select>
       <div className="music-player-controls">
         <button onClick={handlePlayPause}>
