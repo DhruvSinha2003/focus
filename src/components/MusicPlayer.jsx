@@ -20,7 +20,7 @@ const MusicPlayer = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({
     x: window.innerWidth - 344,
-    y: window.innerHeight - 200,
+    y: 192,
   });
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [seek, setSeek] = useState(0);
