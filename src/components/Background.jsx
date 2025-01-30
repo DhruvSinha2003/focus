@@ -158,9 +158,15 @@ const Background = () => {
             )}
           </>
         ) : (
-          <button className="icon-button" onClick={() => setMenuExpanded(true)}>
-            <FiMaximize />
-          </button>
+          <>
+            <button
+              className="icon-button"
+              onClick={() => setMenuExpanded(true)}
+            >
+              <FiMaximize />
+            </button>
+            <span style={{ marginLeft: "16px" }}>Background</span>
+          </>
         )}
       </div>
     </div>

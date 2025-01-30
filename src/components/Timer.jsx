@@ -10,8 +10,8 @@ const Timer = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
   const [position, setPosition] = useState({
-    x: window.innerWidth - 520,
-    y: 174,
+    x: window.innerWidth - 680,
+    y: 24,
   });
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -21,17 +21,17 @@ const Timer = () => {
   const playHeight = 250;
 
   useEffect(() => {
-    const handleMouseMove = (event) => {
+    const handleMouseMove = (e) => {
       if (isDragging) {
         const newX = Math.max(
           0,
-          Math.min(event.clientX - offset.x, window.innerWidth - componentWidth)
+          Math.min(e.clientX - offset.x, window.innerWidth - componentWidth)
         );
         const newY = Math.max(
           0,
           Math.min(
-            event.clientY - offset.y,
-            window.innerHeight - componentHeight
+            e.clientY - offset.y,
+            window.innerHeight - (isRunning ? playHeight : componentHeight)
           )
         );
         setPosition({ x: newX, y: newY });
@@ -42,28 +42,37 @@ const Timer = () => {
       setIsDragging(false);
     };
 
-    const handleSelectStart = (event) => {
+    const handleSelectStart = (e) => {
       if (isDragging) {
-        event.preventDefault();
+        e.preventDefault();
       }
     };
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("selectstart", handleSelectStart);
+    if (isDragging) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      document.addEventListener("selectstart", handleSelectStart);
+    }
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("selectstart", handleSelectStart);
     };
-  }, [isDragging, offset]);
+  }, [isDragging, offset, isRunning, playHeight, componentHeight]);
 
-  const handleMouseDown = (event) => {
-    const boundingBox = event.currentTarget.getBoundingClientRect();
-    const offsetX = event.clientX - boundingBox.left;
-    const offsetY = event.clientY - boundingBox.top;
-    setOffset({ x: offsetX, y: offsetY });
+  const handleMouseDown = (e) => {
+    if (
+      e.target.tagName.toLowerCase() === "input" ||
+      e.target.tagName.toLowerCase() === "button"
+    ) {
+      return;
+    }
+    const rect = e.currentTarget.getBoundingClientRect();
+    setOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
     setIsDragging(true);
   };
 
@@ -88,11 +97,13 @@ const Timer = () => {
       className="glass-panel timer-container slide-in"
       style={{
         position: "absolute",
-        left: position.x,
-        top: position.y,
+        transform: `translate(${position.x}px, ${position.y}px)`,
+        top: 0,
+        left: 0,
         width: componentWidth,
         height: isRunning ? playHeight : componentHeight,
         cursor: isDragging ? "grabbing" : "grab",
+        userSelect: "none",
       }}
       onMouseDown={handleMouseDown}
     >
@@ -104,7 +115,8 @@ const Timer = () => {
             <input
               type="number"
               value={focusDuration}
-              onChange={(e) => setFocusDuration(parseInt(e.target.value))}
+              onChange={(e) => setFocusDuration(parseInt(e.target.value) || 1)}
+              min="1"
             />
           </div>
           <div className="timer-inputs">
@@ -112,7 +124,8 @@ const Timer = () => {
             <input
               type="number"
               value={breakDuration}
-              onChange={(e) => setBreakDuration(parseInt(e.target.value))}
+              onChange={(e) => setBreakDuration(parseInt(e.target.value) || 1)}
+              min="1"
             />
           </div>
           <button
@@ -120,7 +133,7 @@ const Timer = () => {
             onClick={() => {
               setShowSettings(false);
               setTimeLeft(focusDuration * 60);
-              setIsRunning(true); // Start the timer when settings are saved
+              setIsRunning(true);
             }}
           >
             Start Timer
