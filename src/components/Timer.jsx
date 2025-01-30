@@ -101,7 +101,7 @@ const Timer = () => {
         top: 0,
         left: 0,
         width: componentWidth,
-        height: isRunning ? playHeight : componentHeight,
+        height: showSettings ? componentHeight : playHeight,
         cursor: isDragging ? "grabbing" : "grab",
         userSelect: "none",
       }}

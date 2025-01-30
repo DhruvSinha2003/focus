@@ -104,7 +104,7 @@ const Background = () => {
         {menuExpanded ? (
           <>
             <div className="background-header">
-              <h2>Background Settings</h2>
+              <h1>Background Settings</h1>
               <button
                 className="icon-button"
                 onClick={() => setMenuExpanded(false)}

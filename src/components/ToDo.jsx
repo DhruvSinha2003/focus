@@ -87,9 +87,7 @@ const Todo = () => {
           cursor: "move",
         }}
       >
-        <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "600" }}>
-          To Do List
-        </h3>
+        <h1 style={{ fontSize: "18px" }}>To Do List</h1>
         <button
           className="icon-button"
           onClick={() => setIsExpanded(!isExpanded)}

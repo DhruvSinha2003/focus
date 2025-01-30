@@ -168,14 +168,6 @@ const MusicPlayer = () => {
             max="100"
             value={(seek / duration) * 100 || 0}
             onChange={handleSeekChange}
-            style={{
-              width: "100%",
-              position: "absolute",
-              top: 0,
-              left: 0,
-              opacity: 0.01,
-              cursor: "pointer",
-            }}
           />
         </div>
         <div className="progress-time">
